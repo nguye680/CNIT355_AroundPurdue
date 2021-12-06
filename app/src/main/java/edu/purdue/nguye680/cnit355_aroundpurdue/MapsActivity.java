@@ -2,6 +2,7 @@ package edu.purdue.nguye680.cnit355_aroundpurdue;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.purdue.nguye680.cnit355_aroundpurdue.databinding.ActivityMapsBinding;
@@ -44,9 +46,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.423538, -86.921738), 14.0f));
+
+        for (int i = 0; i < MainActivity.locations.size(); i++) {
+            LatLng place = new LatLng(MainActivity.lats.get(i), MainActivity.lons.get(i));
+            mMap.addMarker(new MarkerOptions().position(place).title(MainActivity.names.get(i)));
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+
+                    LatLng latLon = marker.getPosition();
+
+                    //Cycle through places array
+                    for(int i = 0; i < MainActivity.locations.size(); i++) {
+                        if (latLon.latitude == MainActivity.lats.get(i) && latLon.longitude == MainActivity.lons.get(i)){
+                            MainActivity.place = i;
+                            Intent intent = new Intent(MapsActivity.this, GuideActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            });
+        }
+
+
     }
 }

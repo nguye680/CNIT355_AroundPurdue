@@ -63,6 +63,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
+                    android:id="@+id/img"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     app:srcCompat="@drawable/attraction1_purdue_union_hotel"></ImageView>
